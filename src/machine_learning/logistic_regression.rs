@@ -1,7 +1,7 @@
 use super::optimization::gradient_descent;
 use std::f64::consts::E;
 
-/// Returns the weights after performing Logistic regression on the input data points.
+/// 입력 데이터 포인트에 대해 로지스틱 회귀를 수행한 후 가중치를 반환합니다.
 pub fn logistic_regression(
     data_points: Vec<(Vec<f64>, f64)>,
     iterations: usize,

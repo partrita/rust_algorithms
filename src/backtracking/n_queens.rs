@@ -1,49 +1,46 @@
-//! This module provides functionality to solve the N-Queens problem.
+//! 이 모듈은 N-퀸 문제를 해결하는 기능을 제공합니다.
 //!
-//! The N-Queens problem is a classic chessboard puzzle where the goal is to
-//! place N queens on an NxN chessboard so that no two queens threaten each
-//! other. Queens can attack each other if they share the same row, column, or
-//! diagonal.
+//! N-퀸 문제는 N개의 퀸을 NxN 체스판에 서로 위협하지 않도록 배치하는 고전적인
+//! 체스판 퍼즐입니다. 퀸은 같은 행, 열 또는 대각선을 공유하면 서로 공격할 수 있습니다.
 //!
-//! This implementation solves the N-Queens problem using a backtracking algorithm.
-//! It starts with an empty chessboard and iteratively tries to place queens in
-//! different rows, ensuring they do not conflict with each other. If a valid
-//! solution is found, it's added to the list of solutions.
+//! 이 구현은 백트래킹 알고리즘을 사용하여 N-퀸 문제를 해결합니다.
+//! 빈 체스판에서 시작하여 서로 충돌하지 않도록 다른 행에 퀸을 반복적으로 배치하려고 시도합니다.
+//! 유효한 해결책이 발견되면 해결책 목록에 추가됩니다.
 
-/// Solves the N-Queens problem for a given size and returns a vector of solutions.
+/// 주어진 크기에 대해 N-퀸 문제를 해결하고 해결책 벡터를 반환합니다.
 ///
-/// # Arguments
+/// # 인수
 ///
-/// * `n` - The size of the chessboard (NxN).
+/// * `n` - 체스판의 크기 (NxN)입니다.
 ///
-/// # Returns
+/// # 반환 값
 ///
-/// A vector containing all solutions to the N-Queens problem.
+/// N-퀸 문제에 대한 모든 해결책을 포함하는 벡터입니다.
 pub fn n_queens_solver(n: usize) -> Vec<Vec<String>> {
     let mut solver = NQueensSolver::new(n);
     solver.solve()
 }
 
-/// Represents a solver for the N-Queens problem.
+/// N-퀸 문제 해결사를 나타냅니다.
 struct NQueensSolver {
-    // The size of the chessboard
+    // 체스판의 크기
     size: usize,
-    // A 2D vector representing the chessboard where '.' denotes an empty space and 'Q' denotes a queen
+    // '.'은 빈 공간을, 'Q'는 퀸을 나타내는 체스판을 나타내는 2D 벡터
     board: Vec<Vec<char>>,
-    // A vector to store all valid solutions
+    // 모든 유효한 해결책을 저장하는 벡터
     solutions: Vec<Vec<String>>,
 }
 
 impl NQueensSolver {
-    /// Creates a new `NQueensSolver` instance with the given size.
+    /// 주어진 크기로 새 `NQueensSolver` 인스턴스를 만듭니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `size` - The size of the chessboard (N×N).
+    /// * `size` - 체스판의 크기 (N×N)입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// A new `NQueensSolver` instance.
+    /// 새 `NQueensSolver` 인스턴스입니다.
     fn new(size: usize) -> Self {
         NQueensSolver {
             size,
@@ -52,28 +49,28 @@ impl NQueensSolver {
         }
     }
 
-    /// Solves the N-Queens problem and returns a vector of solutions.
+    /// N-퀸 문제를 해결하고 해결책 벡터를 반환합니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// A vector containing all solutions to the N-Queens problem.
+    /// N-퀸 문제에 대한 모든 해결책을 포함하는 벡터입니다.
     fn solve(&mut self) -> Vec<Vec<String>> {
         self.solve_helper(0);
         std::mem::take(&mut self.solutions)
     }
 
-    /// Checks if it's safe to place a queen at the specified position (row, col).
+    /// 지정된 위치 (행, 열)에 퀸을 배치하는 것이 안전한지 확인합니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `row` - The row index of the position to check.
-    /// * `col` - The column index of the position to check.
+    /// * `row` - 확인할 위치의 행 인덱스입니다.
+    /// * `col` - 확인할 위치의 열 인덱스입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// `true` if it's safe to place a queen at the specified position, `false` otherwise.
+    /// 지정된 위치에 퀸을 배치하는 것이 안전하면 `true`이고, 그렇지 않으면 `false`입니다.
     fn is_safe(&self, row: usize, col: usize) -> bool {
-        // Check column and diagonals
+        // 열 및 대각선 확인
         for i in 0..row {
             if self.board[i][col] == 'Q'
                 || (col >= row - i && self.board[i][col - (row - i)] == 'Q')
@@ -85,11 +82,11 @@ impl NQueensSolver {
         true
     }
 
-    /// Recursive helper function to solve the N-Queens problem.
+    /// N-퀸 문제를 해결하기 위한 재귀 헬퍼 함수입니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `row` - The current row being processed.
+    /// * `row` - 현재 처리 중인 행입니다.
     fn solve_helper(&mut self, row: usize) {
         if row == self.size {
             self.solutions

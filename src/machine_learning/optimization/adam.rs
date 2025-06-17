@@ -1,50 +1,49 @@
-//! # Adam (Adaptive Moment Estimation) optimizer
+//! # Adam (Adaptive Moment Estimation) 옵티마이저
 //!
-//! The `Adam (Adaptive Moment Estimation)` optimizer is an adaptive learning rate algorithm used
-//! in gradient descent and machine learning, such as for training neural networks to solve deep
-//! learning problems. Boasting memory-efficient fast convergence rates, it sets and iteratively
-//! updates learning rates individually for each model parameter based on the gradient history.
+//! `Adam (Adaptive Moment Estimation)` 옵티마이저는 경사 하강법 및 기계 학습에서 사용되는 적응형 학습률 알고리즘으로,
+//! 심층 학습 문제를 해결하기 위한 신경망 훈련 등에 사용됩니다. 메모리 효율적인 빠른 수렴 속도를 자랑하며,
+//! 기울기 이력을 기반으로 각 모델 매개변수에 대해 개별적으로 학습률을 설정하고 반복적으로 업데이트합니다.
 //!
-//! ## Algorithm:
+//! ## 알고리즘:
 //!
-//! Given:
-//!   - α is the learning rate
-//!   - (β_1, β_2) are the exponential decay rates for moment estimates
-//!   - ϵ is any small value to prevent division by zero
-//!   - g_t are the gradients at time step t
-//!   - m_t are the biased first moment estimates of the gradient at time step t
-//!   - v_t are the biased second raw moment estimates of the gradient at time step t
-//!   - θ_t are the model parameters at time step t
-//!   - t is the time step
+//! 주어진 값:
+//!   - α: 학습률
+//!   - (β_1, β_2): 모멘트 추정값에 대한 지수 감쇠율
+//!   - ϵ: 0으로 나누는 것을 방지하기 위한 작은 값
+//!   - g_t: 시간 단계 t에서의 기울기
+//!   - m_t: 시간 단계 t에서의 기울기에 대한 편향된 1차 모멘트 추정값
+//!   - v_t: 시간 단계 t에서의 기울기에 대한 편향된 2차 원시 모멘트 추정값
+//!   - θ_t: 시간 단계 t에서의 모델 매개변수
+//!   - t: 시간 단계
 //!
-//! Required:
+//! 필요 조건:
 //!   θ_0
 //!
-//! Initialize:
+//! 초기화:
 //!   m_0 <- 0
 //!   v_0 <- 0
 //!   t <- 0
 //!
-//! while θ_t not converged do
+//! while θ_t가 수렴하지 않을 때까지 반복:
 //!   m_t = β_1 * m_{t−1} + (1 − β_1) * g_t
 //!   v_t = β_2 * v_{t−1} + (1 − β_2) * g_t^2
 //!   m_hat_t = m_t / 1 - β_1^t
 //!   v_hat_t = v_t / 1 - β_2^t
 //!   θ_t = θ_{t-1} − α * m_hat_t / (sqrt(v_hat_t) + ϵ)
 //!
-//! ## Resources:
-//!   - Adam: A Method for Stochastic Optimization (by Diederik P. Kingma and Jimmy Ba):
+//! ## 참고 자료:
+//!   - Adam: 확률적 최적화를 위한 방법 (Diederik P. Kingma 및 Jimmy Ba 저):
 //!       - [https://arxiv.org/abs/1412.6980]
-//!   - PyTorch Adam optimizer:
+//!   - PyTorch Adam 옵티마이저:
 //!       - [https://pytorch.org/docs/stable/generated/torch.optim.Adam.html#torch.optim.Adam]
 //!
 pub struct Adam {
-    learning_rate: f64, // alpha: initial step size for iterative optimization
-    betas: (f64, f64),  // betas: exponential decay rates for moment estimates
-    epsilon: f64,       // epsilon: prevent division by zero
-    m: Vec<f64>,        // m: biased first moment estimate of the gradient vector
-    v: Vec<f64>,        // v: biased second raw moment estimate of the gradient vector
-    t: usize,           // t: time step
+    learning_rate: f64, // 알파: 반복 최적화를 위한 초기 단계 크기
+    betas: (f64, f64),  // 베타: 모멘트 추정값에 대한 지수 감쇠율
+    epsilon: f64,       // 엡실론: 0으로 나누는 것을 방지
+    m: Vec<f64>,        // m: 기울기 벡터의 편향된 1차 모멘트 추정값
+    v: Vec<f64>,        // v: 기울기 벡터의 편향된 2차 원시 모멘트 추정값
+    t: usize,           // t: 시간 단계
 }
 
 impl Adam {
@@ -55,12 +54,12 @@ impl Adam {
         params_len: usize,
     ) -> Self {
         Adam {
-            learning_rate: learning_rate.unwrap_or(1e-3), // typical good default lr
-            betas: betas.unwrap_or((0.9, 0.999)),         // typical good default decay rates
-            epsilon: epsilon.unwrap_or(1e-8),             // typical good default epsilon
-            m: vec![0.0; params_len], // first moment vector elements all initialized to zero
-            v: vec![0.0; params_len], // second moment vector elements all initialized to zero
-            t: 0,                     // time step initialized to zero
+            learning_rate: learning_rate.unwrap_or(1e-3), // 일반적인 기본 학습률
+            betas: betas.unwrap_or((0.9, 0.999)),         // 일반적인 기본 감쇠율
+            epsilon: epsilon.unwrap_or(1e-8),             // 일반적인 기본 엡실론
+            m: vec![0.0; params_len], // 1차 모멘트 벡터 요소는 모두 0으로 초기화
+            v: vec![0.0; params_len], // 2차 모멘트 벡터 요소는 모두 0으로 초기화
+            t: 0,                     // 시간 단계는 0으로 초기화
         }
     }
 
@@ -69,18 +68,18 @@ impl Adam {
         self.t += 1;
 
         for i in 0..gradients.len() {
-            // update biased first moment estimate and second raw moment estimate
+            // 편향된 1차 모멘트 추정값과 2차 원시 모멘트 추정값 업데이트
             self.m[i] = self.betas.0 * self.m[i] + (1.0 - self.betas.0) * gradients[i];
             self.v[i] = self.betas.1 * self.v[i] + (1.0 - self.betas.1) * gradients[i].powf(2f64);
 
-            // compute bias-corrected first moment estimate and second raw moment estimate
+            // 편향 보정된 1차 모멘트 추정값과 2차 원시 모멘트 추정값 계산
             let m_hat = self.m[i] / (1.0 - self.betas.0.powi(self.t as i32));
             let v_hat = self.v[i] / (1.0 - self.betas.1.powi(self.t as i32));
 
-            // update model parameters
+            // 모델 매개변수 업데이트
             model_params[i] -= self.learning_rate * m_hat / (v_hat.sqrt() + self.epsilon);
         }
-        model_params // return updated model parameters
+        model_params // 업데이트된 모델 매개변수 반환
     }
 }
 

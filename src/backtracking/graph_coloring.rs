@@ -1,27 +1,25 @@
-//! This module provides functionality for generating all possible colorings of a undirected (or directed) graph
-//! given a certain number of colors. It includes the GraphColoring struct and methods
-//! for validating color assignments and finding all valid colorings.
+//! 이 모듈은 주어진 색상 수에 대해 무방향 (또는 방향) 그래프의 모든 가능한 색칠을 생성하는 기능을 제공합니다.
+//! GraphColoring 구조체와 색상 할당 유효성 검사 및 모든 유효한 색칠 찾기 메서드를 포함합니다.
 
-/// Represents potential errors when coloring on an adjacency matrix.
+/// 인접 행렬에 색칠할 때 발생할 수 있는 잠재적 오류를 나타냅니다.
 #[derive(Debug, PartialEq, Eq)]
 pub enum GraphColoringError {
-    // Indicates that the adjacency matrix is empty
+    // 인접 행렬이 비어 있음을 나타냅니다.
     EmptyAdjacencyMatrix,
-    // Indicates that the adjacency matrix is not squared
+    // 인접 행렬이 정사각형이 아님을 나타냅니다.
     ImproperAdjacencyMatrix,
 }
 
-/// Generates all possible valid colorings of a graph.
+/// 그래프의 모든 가능한 유효한 색칠을 생성합니다.
 ///
-/// # Arguments
+/// # 인수
 ///
-/// * `adjacency_matrix` - A 2D vector representing the adjacency matrix of the graph.
-/// * `num_colors` - The number of colors available for coloring the graph.
+/// * `adjacency_matrix` - 그래프의 인접 행렬을 나타내는 2D 벡터입니다.
+/// * `num_colors` - 그래프를 색칠하는 데 사용할 수 있는 색상의 수입니다.
 ///
-/// # Returns
+/// # 반환 값
 ///
-/// * A `Result` containing an `Option` with a vector of solutions or a `GraphColoringError` if
-/// there is an issue with the matrix.
+/// * 행렬에 문제가 있는 경우 솔루션 벡터 또는 `GraphColoringError`가 포함된 `Option`을 포함하는 `Result`입니다.
 pub fn generate_colorings(
     adjacency_matrix: Vec<Vec<bool>>,
     num_colors: usize,
@@ -29,35 +27,35 @@ pub fn generate_colorings(
     Ok(GraphColoring::new(adjacency_matrix)?.find_solutions(num_colors))
 }
 
-/// A struct representing a graph coloring problem.
+/// 그래프 색칠 문제를 나타내는 구조체입니다.
 struct GraphColoring {
-    // The adjacency matrix of the graph
+    // 그래프의 인접 행렬
     adjacency_matrix: Vec<Vec<bool>>,
-    // The current colors assigned to each vertex
+    // 각 정점에 할당된 현재 색상
     vertex_colors: Vec<usize>,
-    // Vector of all valid color assignments for the vertices found during the search
+    // 검색 중에 발견된 정점에 대한 모든 유효한 색상 할당 벡터
     solutions: Vec<Vec<usize>>,
 }
 
 impl GraphColoring {
-    /// Creates a new GraphColoring instance.
+    /// 새 GraphColoring 인스턴스를 만듭니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `adjacency_matrix` - A 2D vector representing the adjacency matrix of the graph.
+    /// * `adjacency_matrix` - 그래프의 인접 행렬을 나타내는 2D 벡터입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// * A new instance of GraphColoring or a `GraphColoringError` if the matrix is empty or non-square.
+    /// * 새 GraphColoring 인스턴스 또는 행렬이 비어 있거나 정사각형이 아닌 경우 `GraphColoringError`입니다.
     fn new(adjacency_matrix: Vec<Vec<bool>>) -> Result<Self, GraphColoringError> {
         let num_vertices = adjacency_matrix.len();
 
-        // Check if the adjacency matrix is empty
+        // 인접 행렬이 비어 있는지 확인합니다.
         if num_vertices == 0 {
             return Err(GraphColoringError::EmptyAdjacencyMatrix);
         }
 
-        // Check if the adjacency matrix is square
+        // 인접 행렬이 정사각형인지 확인합니다.
         if adjacency_matrix.iter().any(|row| row.len() != num_vertices) {
             return Err(GraphColoringError::ImproperAdjacencyMatrix);
         }
@@ -69,24 +67,24 @@ impl GraphColoring {
         })
     }
 
-    /// Returns the number of vertices in the graph.
+    /// 그래프의 정점 수를 반환합니다.
     fn num_vertices(&self) -> usize {
         self.adjacency_matrix.len()
     }
 
-    /// Checks if a given color can be assigned to a vertex without causing a conflict.
+    /// 주어진 색상을 충돌 없이 정점에 할당할 수 있는지 확인합니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `vertex` - The index of the vertex to be colored.
-    /// * `color` - The color to be assigned to the vertex.
+    /// * `vertex` - 색칠할 정점의 인덱스입니다.
+    /// * `color` - 정점에 할당할 색상입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// * `true` if the color can be assigned to the vertex, `false` otherwise.
+    /// * 색상을 정점에 할당할 수 있으면 `true`이고, 그렇지 않으면 `false`입니다.
     fn is_color_valid(&self, vertex: usize, color: usize) -> bool {
         for neighbor in 0..self.num_vertices() {
-            // Check outgoing edges from vertex and incoming edges to vertex
+            // 정점에서 나가는 간선과 정점으로 들어오는 간선을 확인합니다.
             if (self.adjacency_matrix[vertex][neighbor] || self.adjacency_matrix[neighbor][vertex])
                 && self.vertex_colors[neighbor] == color
             {
@@ -96,12 +94,12 @@ impl GraphColoring {
         true
     }
 
-    /// Recursively finds all valid colorings for the graph.
+    /// 그래프에 대한 모든 유효한 색칠을 재귀적으로 찾습니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `vertex` - The current vertex to be colored.
-    /// * `num_colors` - The number of colors available for coloring the graph.
+    /// * `vertex` - 현재 색칠할 정점입니다.
+    /// * `num_colors` - 그래프를 색칠하는 데 사용할 수 있는 색상의 수입니다.
     fn find_colorings(&mut self, vertex: usize, num_colors: usize) {
         if vertex == self.num_vertices() {
             self.solutions.push(self.vertex_colors.clone());
@@ -117,15 +115,15 @@ impl GraphColoring {
         }
     }
 
-    /// Finds all solutions for the graph coloring problem.
+    /// 그래프 색칠 문제에 대한 모든 솔루션을 찾습니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `num_colors` - The number of colors available for coloring the graph.
+    /// * `num_colors` - 그래프를 색칠하는 데 사용할 수 있는 색상의 수입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// * A `Result` containing an `Option` with a vector of solutions or a `GraphColoringError`.
+    /// * 솔루션 벡터 또는 `GraphColoringError`가 포함된 `Option`을 포함하는 `Result`입니다.
     fn find_solutions(&mut self, num_colors: usize) -> Option<Vec<Vec<usize>>> {
         self.find_colorings(0, num_colors);
         if self.solutions.is_empty() {

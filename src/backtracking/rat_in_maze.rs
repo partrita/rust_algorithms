@@ -1,45 +1,42 @@
-//! This module contains the implementation of the Rat in Maze problem.
+//! 이 모듈은 미로 속의 쥐 문제의 구현을 포함합니다.
 //!
-//! The Rat in Maze problem is a classic algorithmic problem where the
-//! objective is to find a path from the starting position to the exit
-//! position in a maze.
+//! 미로 속의 쥐 문제는 미로의 시작 위치에서 출구 위치까지의 경로를 찾는 것을
+//! 목표로 하는 고전적인 알고리즘 문제입니다.
 
-/// Enum representing various errors that can occur while working with mazes.
+/// 미로 작업 중 발생할 수 있는 다양한 오류를 나타내는 열거형입니다.
 #[derive(Debug, PartialEq, Eq)]
 pub enum MazeError {
-    /// Indicates that the maze is empty (zero rows).
+    /// 미로가 비어 있음을 나타냅니다(행이 0개).
     EmptyMaze,
-    /// Indicates that the starting position is out of bounds.
+    /// 시작 위치가 범위를 벗어났음을 나타냅니다.
     OutOfBoundPos,
-    /// Indicates an improper representation of the maze (e.g., non-rectangular maze).
+    /// 미로의 부적절한 표현을 나타냅니다(예: 직사각형이 아닌 미로).
     ImproperMazeRepr,
 }
 
-/// Finds a path through the maze starting from the specified position.
+/// 지정된 위치에서 시작하여 미로를 통과하는 경로를 찾습니다.
 ///
-/// # Arguments
+/// # 인수
 ///
-/// * `maze` - The maze represented as a vector of vectors where each
-/// inner vector represents a row in the maze grid.
-/// * `start_x` - The x-coordinate of the starting position.
-/// * `start_y` - The y-coordinate of the starting position.
+/// * `maze` - 각 내부 벡터가 미로 그리드의 행을 나타내는 벡터의 벡터로 표현된 미로입니다.
+/// * `start_x` - 시작 위치의 x 좌표입니다.
+/// * `start_y` - 시작 위치의 y 좌표입니다.
 ///
-/// # Returns
+/// # 반환 값
 ///
-/// A `Result` where:
-/// - `Ok(Some(solution))` if a path is found and contains the solution matrix.
-/// - `Ok(None)` if no path is found.
-/// - `Err(MazeError)` for various error conditions such as out-of-bound start position or improper maze representation.
+/// `Result`로서 다음 중 하나를 반환합니다:
+/// - 경로가 발견되고 해결책 행렬을 포함하는 경우 `Ok(Some(solution))`
+/// - 경로가 발견되지 않은 경우 `Ok(None)`
+/// - 범위를 벗어난 시작 위치 또는 부적절한 미로 표현과 같은 다양한 오류 조건에 대해 `Err(MazeError)`
 ///
-/// # Solution Selection
+/// # 해결책 선택
 ///
-/// The function returns the first successful path it discovers based on the predefined order of moves.
-/// The order of moves is defined in the `MOVES` constant of the `Maze` struct.
+/// 이 함수는 미리 정의된 이동 순서에 따라 발견한 첫 번째 성공적인 경로를 반환합니다.
+/// 이동 순서는 `Maze` 구조체의 `MOVES` 상수에 정의되어 있습니다.
 ///
-/// The backtracking algorithm explores each direction in this order. If multiple solutions exist,
-/// the algorithm returns the first path it finds according to this sequence. It recursively explores
-/// each direction, marks valid moves, and backtracks if necessary, ensuring that the solution is found
-/// efficiently and consistently.
+/// 백트래킹 알고리즘은 이 순서대로 각 방향을 탐색합니다. 여러 해결책이 존재하는 경우,
+/// 알고리즘은 이 순서에 따라 찾은 첫 번째 경로를 반환합니다. 각 방향을 재귀적으로 탐색하고,
+/// 유효한 이동을 표시하며, 필요한 경우 백트래킹하여 해결책을 효율적이고 일관되게 찾도록 보장합니다.
 pub fn find_path_in_maze(
     maze: &[Vec<bool>],
     start_x: usize,
@@ -49,71 +46,70 @@ pub fn find_path_in_maze(
         return Err(MazeError::EmptyMaze);
     }
 
-    // Validate start position
+    // 시작 위치 유효성 검사
     if start_x >= maze.len() || start_y >= maze[0].len() {
         return Err(MazeError::OutOfBoundPos);
     }
 
-    // Validate maze representation (if necessary)
+    // 미로 표현 유효성 검사 (필요한 경우)
     if maze.iter().any(|row| row.len() != maze[0].len()) {
         return Err(MazeError::ImproperMazeRepr);
     }
 
-    // If validations pass, proceed with finding the path
+    // 유효성 검사를 통과하면 경로 찾기 진행
     let maze_instance = Maze::new(maze.to_owned());
     Ok(maze_instance.find_path(start_x, start_y))
 }
 
-/// Represents a maze.
+/// 미로를 나타냅니다.
 struct Maze {
     maze: Vec<Vec<bool>>,
 }
 
 impl Maze {
-    /// Represents possible moves in the maze.
+    /// 미로에서 가능한 이동을 나타냅니다.
     const MOVES: [(isize, isize); 4] = [(0, 1), (1, 0), (0, -1), (-1, 0)];
 
-    /// Constructs a new Maze instance.
-    /// # Arguments
+    /// 새 Maze 인스턴스를 생성합니다.
+    /// # 인수
     ///
-    /// * `maze` - The maze represented as a vector of vectors where each
-    /// inner vector represents a row in the maze grid.
+    /// * `maze` - 각 내부 벡터가 미로 그리드의 행을 나타내는 벡터의 벡터로 표현된 미로입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// A new Maze instance.
+    /// 새 Maze 인스턴스입니다.
     fn new(maze: Vec<Vec<bool>>) -> Self {
         Maze { maze }
     }
 
-    /// Returns the width of the maze.
+    /// 미로의 너비를 반환합니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// The width of the maze.
+    /// 미로의 너비입니다.
     fn width(&self) -> usize {
         self.maze[0].len()
     }
 
-    /// Returns the height of the maze.
+    /// 미로의 높이를 반환합니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// The height of the maze.
+    /// 미로의 높이입니다.
     fn height(&self) -> usize {
         self.maze.len()
     }
 
-    /// Finds a path through the maze starting from the specified position.
+    /// 지정된 위치에서 시작하여 미로를 통과하는 경로를 찾습니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `start_x` - The x-coordinate of the starting position.
-    /// * `start_y` - The y-coordinate of the starting position.
+    /// * `start_x` - 시작 위치의 x 좌표입니다.
+    /// * `start_y` - 시작 위치의 y 좌표입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// A solution matrix if a path is found or None if not found.
+    /// 경로가 발견되면 해결책 행렬을 반환하고, 그렇지 않으면 None을 반환합니다.
     fn find_path(&self, start_x: usize, start_y: usize) -> Option<Vec<Vec<bool>>> {
         let mut solution = vec![vec![false; self.width()]; self.height()];
         if self.solve(start_x as isize, start_y as isize, &mut solution) {
@@ -123,17 +119,17 @@ impl Maze {
         }
     }
 
-    /// Recursively solves the Rat in Maze problem using backtracking.
+    /// 백트래킹을 사용하여 미로 속의 쥐 문제를 재귀적으로 해결합니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `x` - The current x-coordinate.
-    /// * `y` - The current y-coordinate.
-    /// * `solution` - The current solution matrix.
+    /// * `x` - 현재 x 좌표입니다.
+    /// * `y` - 현재 y 좌표입니다.
+    /// * `solution` - 현재 해결책 행렬입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// A boolean indicating whether a solution was found.
+    /// 해결책을 찾았는지 여부를 나타내는 부울 값입니다.
     fn solve(&self, x: isize, y: isize, solution: &mut [Vec<bool>]) -> bool {
         if x == (self.height() as isize - 1) && y == (self.width() as isize - 1) {
             solution[x as usize][y as usize] = true;
@@ -149,24 +145,24 @@ impl Maze {
                 }
             }
 
-            // If none of the directions lead to the solution, backtrack
+            // 어떤 방향으로도 해결책에 도달하지 못하면 백트래킹합니다.
             solution[x as usize][y as usize] = false;
             return false;
         }
         false
     }
 
-    /// Checks if a given position is valid in the maze.
+    /// 주어진 위치가 미로에서 유효한지 확인합니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `x` - The x-coordinate of the position.
-    /// * `y` - The y-coordinate of the position.
-    /// * `solution` - The current solution matrix.
+    /// * `x` - 위치의 x 좌표입니다.
+    /// * `y` - 위치의 y 좌표입니다.
+    /// * `solution` - 현재 해결책 행렬입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// A boolean indicating whether the position is valid.
+    /// 위치가 유효한지 여부를 나타내는 부울 값입니다.
     fn is_valid(&self, x: isize, y: isize, solution: &[Vec<bool>]) -> bool {
         x >= 0
             && y >= 0

@@ -1,4 +1,4 @@
-/// Returns the parameters of the line after performing simple linear regression on the input data.
+/// 입력 데이터에 대해 단순 선형 회귀를 수행한 후 선의 매개변수를 반환합니다.
 pub fn linear_regression(data_points: Vec<(f64, f64)>) -> Option<(f64, f64)> {
     if data_points.is_empty() {
         return None;
@@ -22,9 +22,9 @@ pub fn linear_regression(data_points: Vec<(f64, f64)>) -> Option<(f64, f64)> {
     let std_dev_y = std_dev_sqr_y.sqrt();
     let std_dev_prod = std_dev_x * std_dev_y;
 
-    let pcc = covariance / std_dev_prod; //Pearson's correlation constant
-    let b = pcc * (std_dev_y / std_dev_x); //Slope of the line
-    let a = mean_y - b * mean_x; //Y-Intercept of the line
+    let pcc = covariance / std_dev_prod; // 피어슨 상관 계수
+    let b = pcc * (std_dev_y / std_dev_x); // 선의 기울기
+    let a = mean_y - b * mean_x; // 선의 Y 절편
 
     Some((a, b))
 }
