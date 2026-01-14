@@ -6,27 +6,30 @@ name: build
   schedule:
     - cron: '51 2 * * 4'
 
+permissions:
+  contents: read
+
 jobs:
   fmt:
     name: cargo fmt
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: cargo fmt
       run: cargo fmt --all -- --check
-   
+
   clippy:
     name: cargo clippy
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: cargo clippy
       run: cargo clippy --all --all-targets -- -D warnings
-  
+
   test:
     name: cargo test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: cargo test
       run: cargo test

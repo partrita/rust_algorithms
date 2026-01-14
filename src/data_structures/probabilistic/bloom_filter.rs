@@ -21,6 +21,7 @@ pub trait BloomFilter<Item: Hash> {
 /// When looking for an item, we hash its value and retrieve the boolean at index `hash(item) % CAPACITY`
 /// If it's `false` it's absolutely sure the item isn't present
 /// If it's `true` the item may be present, or maybe another one produces the same hash
+#[allow(dead_code)]
 #[derive(Debug)]
 struct BasicBloomFilter<const CAPACITY: usize> {
     vec: [bool; CAPACITY],
@@ -108,7 +109,7 @@ pub struct MultiBinaryBloomFilter {
 
 impl MultiBinaryBloomFilter {
     pub fn with_dimensions(filter_size: usize, hash_count: usize) -> Self {
-        let bytes_count = filter_size / 8 + usize::from(filter_size % 8 > 0); // we need 8 times less entries in the array, since we are using bytes. Careful that we have at least one element though
+        let bytes_count = filter_size / 8 + usize::from(!filter_size.is_multiple_of(8)); // we need 8 times less entries in the array, since we are using bytes. Careful that we have at least one element though
         Self {
             filter_size,
             bytes: vec![0; bytes_count],
