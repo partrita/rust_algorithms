@@ -1,15 +1,15 @@
-//! A Rust implementation of Sudoku solver using Backtracking.
+//! 백트래킹을 사용한 스도쿠 해결기의 Rust 구현입니다.
 //!
-//! This module provides functionality to solve Sudoku puzzles using the backtracking algorithm.
+//! 이 모듈은 백트래킹 알고리즘을 사용하여 스도쿠 퍼즐을 해결하는 기능을 제공합니다.
 //!
-//! GeeksForGeeks: [Sudoku Backtracking](https://www.geeksforgeeks.org/sudoku-backtracking-7/)
+//! 참고: [스도쿠 백트래킹 - GeeksForGeeks](https://www.geeksforgeeks.org/sudoku-backtracking-7/)
 
-/// Solves a Sudoku puzzle.
+/// 스도쿠 퍼즐을 해결합니다.
 ///
-/// Given a partially filled Sudoku puzzle represented by a 9x9 grid, this function attempts to
-/// solve the puzzle using the backtracking algorithm.
+/// 9x9 그리드로 표현된 부분적으로 채워진 스도쿠 퍼즐이 주어지면, 이 함수는 백트래킹 알고리즘을 사용하여
+/// 퍼즐을 해결하려고 시도합니다.
 ///
-/// Returns the solved Sudoku board if a solution exists, or `None` if no solution is found.
+/// 해결책이 존재하면 해결된 스도쿠 보드를 반환하고, 해결책이 없으면 `None`을 반환합니다.
 pub fn sudoku_solver(board: &[[u8; 9]; 9]) -> Option<[[u8; 9]; 9]> {
     let mut solver = SudokuSolver::new(*board);
     if solver.solve() {
@@ -19,23 +19,23 @@ pub fn sudoku_solver(board: &[[u8; 9]; 9]) -> Option<[[u8; 9]; 9]> {
     }
 }
 
-/// Represents a Sudoku puzzle solver.
+/// 스도쿠 퍼즐 해결사를 나타냅니다.
 struct SudokuSolver {
-    /// The Sudoku board represented by a 9x9 grid.
+    /// 9x9 그리드로 표현된 스도쿠 보드입니다.
     board: [[u8; 9]; 9],
 }
 
 impl SudokuSolver {
-    /// Creates a new Sudoku puzzle solver with the given board.
+    /// 주어진 보드로 새 스도쿠 퍼즐 해결사를 만듭니다.
     fn new(board: [[u8; 9]; 9]) -> SudokuSolver {
         SudokuSolver { board }
     }
 
-    /// Finds an empty cell in the Sudoku board.
+    /// 스도쿠 보드에서 빈 셀을 찾습니다.
     ///
-    /// Returns the coordinates of an empty cell `(row, column)` if found, or `None` if all cells are filled.
+    /// 빈 셀의 좌표 `(행, 열)`을 반환하거나, 모든 셀이 채워져 있으면 `None`을 반환합니다.
     fn find_empty_cell(&self) -> Option<(usize, usize)> {
-        // Find an empty cell in the board (returns None if all cells are filled)
+        // 보드에서 빈 셀을 찾습니다 (모든 셀이 채워져 있으면 None을 반환).
         for row in 0..9 {
             for column in 0..9 {
                 if self.board[row][column] == 0 {
@@ -47,28 +47,28 @@ impl SudokuSolver {
         None
     }
 
-    /// Checks whether a given value can be placed in a specific cell according to Sudoku rules.
+    /// 주어진 값이 스도쿠 규칙에 따라 특정 셀에 배치될 수 있는지 확인합니다.
     ///
-    /// Returns `true` if the value can be placed in the cell, otherwise `false`.
+    /// 값이 셀에 배치될 수 있으면 `true`를 반환하고, 그렇지 않으면 `false`를 반환합니다.
     fn is_value_valid(&self, coordinates: (usize, usize), value: u8) -> bool {
         let (row, column) = coordinates;
 
-        // Checks if the value to be added in the board is an acceptable value for the cell
-        // Checking through the row
+        // 보드에 추가할 값이 셀에 허용되는 값인지 확인합니다.
+        // 행을 통해 확인합니다.
         for current_column in 0..9 {
             if self.board[row][current_column] == value {
                 return false;
             }
         }
 
-        // Checking through the column
+        // 열을 통해 확인합니다.
         for current_row in 0..9 {
             if self.board[current_row][column] == value {
                 return false;
             }
         }
 
-        // Checking through the 3x3 block of the cell
+        // 셀의 3x3 블록을 통해 확인합니다.
         let start_row = row / 3 * 3;
         let start_column = column / 3 * 3;
 
@@ -83,9 +83,9 @@ impl SudokuSolver {
         true
     }
 
-    /// Solves the Sudoku puzzle recursively using backtracking.
+    /// 백트래킹을 사용하여 스도쿠 퍼즐을 재귀적으로 해결합니다.
     ///
-    /// Returns `true` if a solution is found, otherwise `false`.
+    /// 해결책이 발견되면 `true`를 반환하고, 그렇지 않으면 `false`를 반환합니다.
     fn solve(&mut self) -> bool {
         let empty_cell = self.find_empty_cell();
 
@@ -96,16 +96,16 @@ impl SudokuSolver {
                     if self.solve() {
                         return true;
                     }
-                    // Backtracking if the board cannot be solved using the current configuration
+                    // 현재 구성으로 보드를 해결할 수 없는 경우 백트래킹합니다.
                     self.board[row][column] = 0;
                 }
             }
         } else {
-            // If the board is complete
+            // 보드가 완성된 경우
             return true;
         }
 
-        // Returning false if the board cannot be solved using the current configuration
+        // 현재 구성으로 보드를 해결할 수 없는 경우 false를 반환합니다.
         false
     }
 }

@@ -1,14 +1,14 @@
-/// Computes the Huber loss between arrays of true and predicted values.
+/// 실제 값 배열과 예측 값 배열 간의 후버 손실을 계산합니다.
 ///
-/// # Arguments
+/// # 인수
 ///
-/// * `y_true` - An array of true values.
-/// * `y_pred` - An array of predicted values.
-/// * `delta` - The threshold parameter that controls the linear behavior of the loss function.
+/// * `y_true` - 실제 값 배열입니다.
+/// * `y_pred` - 예측 값 배열입니다.
+/// * `delta` - 손실 함수의 선형 동작을 제어하는 임계값 매개변수입니다.
 ///
-/// # Returns
+/// # 반환 값
 ///
-/// The average Huber loss for all pairs of true and predicted values.
+/// 모든 실제 값과 예측 값 쌍에 대한 평균 후버 손실입니다.
 pub fn huber_loss(y_true: &[f64], y_pred: &[f64], delta: f64) -> Option<f64> {
     if y_true.len() != y_pred.len() || y_pred.is_empty() {
         return None;

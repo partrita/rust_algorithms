@@ -1,16 +1,16 @@
-//! This module provides a function to generate all possible distinct permutations
-//! of a given collection of integers using a backtracking algorithm.
+//! 이 모듈은 백트래킹 알고리즘을 사용하여 주어진 정수 컬렉션의 모든 가능한
+//! 고유한 순열을 생성하는 함수를 제공합니다.
 
-/// Generates all possible distinct permutations of a given vector of integers.
+/// 주어진 정수 벡터의 모든 가능한 고유한 순열을 생성합니다.
 ///
-/// # Arguments
+/// # 인수
 ///
-/// * `nums` - A vector of integers. The input vector is sorted before generating
-/// permutations to handle duplicates effectively.
+/// * `nums` - 정수 벡터입니다. 중복을 효과적으로 처리하기 위해 순열을 생성하기 전에
+/// 입력 벡터가 정렬됩니다.
 ///
-/// # Returns
+/// # 반환 값
 ///
-/// A vector containing all possible distinct permutations of the input vector.
+/// 입력 벡터의 모든 가능한 고유한 순열을 포함하는 벡터입니다.
 pub fn permute(mut nums: Vec<isize>) -> Vec<Vec<isize>> {
     let mut permutations = Vec::new();
     let mut current = Vec::new();
@@ -22,14 +22,14 @@ pub fn permute(mut nums: Vec<isize>) -> Vec<Vec<isize>> {
     permutations
 }
 
-/// Helper function for the `permute` function to generate distinct permutations recursively.
+/// `permute` 함수가 고유한 순열을 재귀적으로 생성하기 위한 헬퍼 함수입니다.
 ///
-/// # Arguments
+/// # 인수
 ///
-/// * `nums` - A reference to the sorted slice of integers.
-/// * `current` - A mutable reference to the vector holding the current permutation.
-/// * `used` - A mutable reference to a vector tracking which elements are used.
-/// * `permutations` - A mutable reference to the vector holding all generated distinct permutations.
+/// * `nums` - 정렬된 정수 슬라이스에 대한 참조입니다.
+/// * `current` - 현재 순열을 담고 있는 벡터에 대한 변경 가능한 참조입니다.
+/// * `used` - 어떤 요소가 사용되었는지 추적하는 벡터에 대한 변경 가능한 참조입니다.
+/// * `permutations` - 생성된 모든 고유한 순열을 담고 있는 벡터에 대한 변경 가능한 참조입니다.
 fn generate(
     nums: &[isize],
     current: &mut Vec<isize>,

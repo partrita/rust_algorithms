@@ -1,24 +1,24 @@
-//! This module provides a function to generate all possible combinations
-//! of `k` numbers out of `0...n-1` using a backtracking algorithm.
+//! 이 모듈은 백트래킹 알고리즘을 사용하여 `0...n-1`에서 `k`개의 숫자로
+//! 만들 수 있는 모든 가능한 조합을 생성하는 함수를 제공합니다.
 
-/// Custom error type for combination generation.
+/// 조합 생성 시 사용자 정의 오류 유형입니다.
 #[derive(Debug, PartialEq)]
 pub enum CombinationError {
     KGreaterThanN,
     InvalidZeroRange,
 }
 
-/// Generates all possible combinations of `k` numbers out of `0...n-1`.
+/// `0...n-1` 범위의 숫자 중 `k`개를 선택하여 만들 수 있는 모든 가능한 조합을 생성합니다.
 ///
-/// # Arguments
+/// # 인수
 ///
-/// * `n` - The upper limit of the range (`0` to `n-1`).
-/// * `k` - The number of elements in each combination.
+/// * `n` - 범위의 상한 (`0`부터 `n-1`까지).
+/// * `k` - 각 조합의 요소 수.
 ///
-/// # Returns
+/// # 반환 값
 ///
-/// A `Result` containing a vector with all possible combinations of `k` numbers out of `0...n-1`,
-/// or a `CombinationError` if the input is invalid.
+/// `0...n-1` 범위의 숫자 중 `k`개를 선택하여 만들 수 있는 모든 가능한 조합을 담은 벡터를 포함하는 `Result` 또는
+/// 입력이 유효하지 않은 경우 `CombinationError`.
 pub fn generate_all_combinations(n: usize, k: usize) -> Result<Vec<Vec<usize>>, CombinationError> {
     if n == 0 && k > 0 {
         return Err(CombinationError::InvalidZeroRange);
@@ -34,16 +34,16 @@ pub fn generate_all_combinations(n: usize, k: usize) -> Result<Vec<Vec<usize>>, 
     Ok(combinations)
 }
 
-/// Helper function to generate combinations recursively.
+/// 조합을 재귀적으로 생성하는 헬퍼 함수입니다.
 ///
-/// # Arguments
+/// # 인수
 ///
-/// * `start` - The current number to start the combination with.
-/// * `n` - The upper limit of the range (`0` to `n-1`).
-/// * `k` - The number of elements left to complete the combination.
-/// * `index` - The current index being filled in the combination.
-/// * `current` - A mutable reference to the current combination being constructed.
-/// * `combinations` - A mutable reference to the vector holding all combinations.
+/// * `start` - 조합을 시작할 현재 숫자입니다.
+/// * `n` - 범위의 상한 (`0`부터 `n-1`까지)입니다.
+/// * `k` - 조합을 완성하기 위해 남은 요소의 수입니다.
+/// * `index` - 조합에서 현재 채우고 있는 인덱스입니다.
+/// * `current` - 현재 구성 중인 조합에 대한 변경 가능한 참조입니다.
+/// * `combinations` - 모든 조합을 담고 있는 벡터에 대한 변경 가능한 참조입니다.
 fn backtrack(
     start: usize,
     n: usize,

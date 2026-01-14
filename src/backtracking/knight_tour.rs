@@ -1,22 +1,22 @@
-//! This module contains the implementation of the Knight's Tour problem.
+//! 이 모듈은 나이트 투어 문제의 구현을 포함합니다.
 //!
-//! The Knight's Tour is a classic chess problem where the objective is to move a knight to every square on a chessboard exactly once.
+//! 나이트 투어는 체스판의 모든 칸을 나이트가 정확히 한 번씩 방문하는 것을 목표로 하는 고전적인 체스 문제입니다.
 
-/// Finds the Knight's Tour starting from the specified position.
+/// 지정된 위치에서 시작하는 나이트 투어를 찾습니다.
 ///
-/// # Arguments
+/// # 인수
 ///
-/// * `size_x` - The width of the chessboard.
-/// * `size_y` - The height of the chessboard.
-/// * `start_x` - The x-coordinate of the starting position.
-/// * `start_y` - The y-coordinate of the starting position.
+/// * `size_x` - 체스판의 너비입니다.
+/// * `size_y` - 체스판의 높이입니다.
+/// * `start_x` - 시작 위치의 x 좌표입니다.
+/// * `start_y` - 시작 위치의 y 좌표입니다.
 ///
-/// # Returns
+/// # 반환 값
 ///
-/// A tour matrix if the tour was found or None if not found.
-/// The tour matrix returned is essentially the board field of the `KnightTour`
-/// struct `Vec<Vec<usize>>`. It represents the sequence of moves made by the
-/// knight on the chessboard, with each cell containing the order in which the knight visited that square.
+/// 투어가 발견되면 투어 행렬을 반환하고, 그렇지 않으면 None을 반환합니다.
+/// 반환되는 투어 행렬은 본질적으로 `KnightTour` 구조체의 `board` 필드인
+/// `Vec<Vec<usize>>`입니다. 이는 나이트가 체스판에서 수행한 이동 순서를 나타내며,
+/// 각 셀에는 나이트가 해당 칸을 방문한 순서가 포함됩니다.
 pub fn find_knight_tour(
     size_x: usize,
     size_y: usize,
@@ -27,13 +27,13 @@ pub fn find_knight_tour(
     tour.find_tour(start_x, start_y)
 }
 
-/// Represents the KnightTour struct which implements the Knight's Tour problem.
+/// 나이트 투어 문제를 구현하는 KnightTour 구조체를 나타냅니다.
 struct KnightTour {
     board: Vec<Vec<usize>>,
 }
 
 impl KnightTour {
-    /// Possible moves of the knight on the board
+    /// 체스판에서 나이트가 가능한 이동
     const MOVES: [(isize, isize); 8] = [
         (2, 1),
         (1, 2),
@@ -45,40 +45,40 @@ impl KnightTour {
         (2, -1),
     ];
 
-    /// Constructs a new KnightTour instance with the given board size.
-    /// # Arguments
+    /// 주어진 체스판 크기로 새 KnightTour 인스턴스를 생성합니다.
+    /// # 인수
     ///
-    /// * `size_x` - The width of the chessboard.
-    /// * `size_y` - The height of the chessboard.
+    /// * `size_x` - 체스판의 너비입니다.
+    /// * `size_y` - 체스판의 높이입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// A new KnightTour instance.
+    /// 새 KnightTour 인스턴스입니다.
     fn new(size_x: usize, size_y: usize) -> Self {
         let board = vec![vec![0; size_x]; size_y];
         KnightTour { board }
     }
 
-    /// Returns the width of the chessboard.
+    /// 체스판의 너비를 반환합니다.
     fn size_x(&self) -> usize {
         self.board.len()
     }
 
-    /// Returns the height of the chessboard.
+    /// 체스판의 높이를 반환합니다.
     fn size_y(&self) -> usize {
         self.board[0].len()
     }
 
-    /// Checks if the given position is safe to move to.
+    /// 주어진 위치로 이동하는 것이 안전한지 확인합니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `x` - The x-coordinate of the position.
-    /// * `y` - The y-coordinate of the position.
+    /// * `x` - 위치의 x 좌표입니다.
+    /// * `y` - 위치의 y 좌표입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// A boolean indicating whether the position is safe to move to.
+    /// 위치로 이동하는 것이 안전한지 여부를 나타내는 부울 값입니다.
     fn is_safe(&self, x: isize, y: isize) -> bool {
         x >= 0
             && y >= 0
@@ -87,17 +87,17 @@ impl KnightTour {
             && self.board[x as usize][y as usize] == 0
     }
 
-    /// Recursively solves the Knight's Tour problem.
+    /// 나이트 투어 문제를 재귀적으로 해결합니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `x` - The current x-coordinate of the knight.
-    /// * `y` - The current y-coordinate of the knight.
-    /// * `move_count` - The current move count.
+    /// * `x` - 나이트의 현재 x 좌표입니다.
+    /// * `y` - 나이트의 현재 y 좌표입니다.
+    /// * `move_count` - 현재 이동 횟수입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// A boolean indicating whether a solution was found.
+    /// 해결책을 찾았는지 여부를 나타내는 부울 값입니다.
     fn solve_tour(&mut self, x: isize, y: isize, move_count: usize) -> bool {
         if move_count == self.size_x() * self.size_y() {
             return true;
@@ -112,7 +112,7 @@ impl KnightTour {
                 if self.solve_tour(next_x, next_y, move_count + 1) {
                     return true;
                 }
-                // Backtrack
+                // 백트래킹
                 self.board[next_x as usize][next_y as usize] = 0;
             }
         }
@@ -120,16 +120,16 @@ impl KnightTour {
         false
     }
 
-    /// Finds the Knight's Tour starting from the specified position.
+    /// 지정된 위치에서 시작하는 나이트 투어를 찾습니다.
     ///
-    /// # Arguments
+    /// # 인수
     ///
-    /// * `start_x` - The x-coordinate of the starting position.
-    /// * `start_y` - The y-coordinate of the starting position.
+    /// * `start_x` - 시작 위치의 x 좌표입니다.
+    /// * `start_y` - 시작 위치의 y 좌표입니다.
     ///
-    /// # Returns
+    /// # 반환 값
     ///
-    /// A tour matrix if the tour was found or None if not found.
+    /// 투어가 발견되면 투어 행렬을 반환하고, 그렇지 않으면 None을 반환합니다.
     fn find_tour(&mut self, start_x: usize, start_y: usize) -> Option<Vec<Vec<usize>>> {
         if !self.is_safe(start_x as isize, start_y as isize) {
             return None;

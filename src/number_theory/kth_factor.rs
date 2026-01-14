@@ -1,5 +1,5 @@
-// Kth Factor of N
-// The idea is to check for each number in the range [N, 1], and print the Kth number that divides N completely.
+// N의 K번째 약수
+// 아이디어는 [N, 1] 범위의 각 숫자를 확인하고 N을 완전히 나누는 K번째 숫자를 출력하는 것입니다.
 
 pub fn kth_factor(n: i32, k: i32) -> i32 {
     let mut factors: Vec<i32> = Vec::new();

@@ -9,16 +9,16 @@ macro_rules! hex_uint {
 }
 
 /**
- * Poly1305 Message Authentication Code:
- * This implementation is based on RFC8439.
- * Note that the Big Integer library we are using may not be suitable for
- * cryptographic applications due to non constant time operations.
+ * Poly1305 메시지 인증 코드:
+ * 이 구현은 RFC8439를 기반으로 합니다.
+ * 사용 중인 Big Integer 라이브러리는 비일정 시간 연산으로 인해
+ * 암호화 애플리케이션에 적합하지 않을 수 있습니다.
 */
 pub struct Poly1305 {
     p: BigUint,
     r: BigUint,
     s: BigUint,
-    /// The accumulator
+    /// 누산기
     pub acc: BigUint,
 }
 
@@ -45,9 +45,9 @@ impl Poly1305 {
         self.s = BigUint::from_bytes_le(&key[16..]);
         self.clamp_r();
     }
-    /// process a 16-byte-long message block. If message is not long enough,
-    /// fill the `msg` array with zeros, but set `msg_bytes` to the original
-    /// chunk length in bytes. See `basic_tv1` for example usage.
+    /// 16바이트 길이의 메시지 블록을 처리합니다. 메시지가 충분히 길지 않으면,
+    /// `msg` 배열을 0으로 채우지만 `msg_bytes`는 원래 청크 길이(바이트 단위)로 설정합니다.
+    /// 사용 예는 `basic_tv1`을 참조하십시오.
     pub fn add_msg(&mut self, msg: &[u8; 16], msg_bytes: u64) {
         let mut n = BigUint::from_bytes_le(msg);
         n.set_bit(msg_bytes * 8, true);
@@ -55,7 +55,7 @@ impl Poly1305 {
         self.acc *= &self.r;
         self.acc %= &self.p;
     }
-    /// The result is guaranteed to be 16 bytes long
+    /// 결과는 16바이트 길이가 보장됩니다.
     pub fn get_tag(&self) -> Vec<u8> {
         let result = &self.acc + &self.s;
         let mut bytes = result.to_bytes_le();

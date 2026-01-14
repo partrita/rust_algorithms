@@ -1,7 +1,7 @@
-/// Performs long multiplication on string representations of non-negative numbers.
+/// 문자열로 표현된 음이 아닌 정수에 대해 긴 곱셈을 수행합니다.
 pub fn multiply(num1: &str, num2: &str) -> String {
     if !is_valid_nonnegative(num1) || !is_valid_nonnegative(num2) {
-        panic!("String does not conform to specification")
+        panic!("문자열이 사양을 따르지 않습니다")
     }
 
     if num1 == "0" || num2 == "0" {
@@ -13,9 +13,9 @@ pub fn multiply(num1: &str, num2: &str) -> String {
     for (i, c1) in num1.chars().rev().enumerate() {
         for (j, c2) in num2.chars().rev().enumerate() {
             let mul = c1.to_digit(10).unwrap() * c2.to_digit(10).unwrap();
-            // It could be a two-digit number here.
+            // 여기에는 두 자리 숫자가 올 수 있습니다.
             mult[i + j + 1] += (mult[i + j] + mul) / 10;
-            // Handling rounding. Here's a single digit.
+            // 반올림 처리. 여기에는 한 자리 숫자입니다.
             mult[i + j] = (mult[i + j] + mul) % 10;
         }
     }

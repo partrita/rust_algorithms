@@ -1,4 +1,4 @@
-// Algorithm created by Peter Borwein in 1985
+// 1985년 Peter Borwein이 만든 알고리즘
 // https://doi.org/10.1016/0196-6774(85)90006-9
 
 use crate::math::sieve_of_eratosthenes;
@@ -6,7 +6,7 @@ use num_bigint::BigUint;
 use num_traits::One;
 use std::collections::BTreeMap;
 
-/// Calculate the sum of n / p^i with integer division for all values of i
+/// 모든 i 값에 대해 정수 나눗셈으로 n / p^i의 합을 계산합니다.
 fn index(p: usize, n: usize) -> usize {
     let mut index = 0;
     let mut i = 1;
@@ -21,16 +21,16 @@ fn index(p: usize, n: usize) -> usize {
     index
 }
 
-/// Calculate the factorial with time complexity O(log(log(n)) * M(n * log(n))) where M(n) is the time complexity of multiplying two n-digit numbers together.
+/// M(n)이 두 n자리 숫자를 곱하는 시간 복잡도일 때, 시간 복잡도 O(log(log(n)) * M(n * log(n)))으로 계승을 계산합니다.
 pub fn fast_factorial(n: usize) -> BigUint {
     if n < 2 {
         return BigUint::one();
     }
 
-    // get list of primes that will be factors of n!
+    // n!의 인수가 될 소수 목록을 가져옵니다.
     let primes = sieve_of_eratosthenes(n);
 
-    // Map the primes with their index
+    // 소수를 해당 인덱스와 매핑합니다.
     let p_indices = primes
         .into_iter()
         .map(|p| (p, index(p, n)))
@@ -38,10 +38,10 @@ pub fn fast_factorial(n: usize) -> BigUint {
 
     let max_bits = p_indices[&2].next_power_of_two().ilog2() + 1;
 
-    // Create a Vec of 1's
+    // 1로 채워진 Vec을 만듭니다.
     let mut a = vec![BigUint::one(); max_bits as usize];
 
-    // For every prime p, multiply a[i] by p if the ith bit of p's index is 1
+    // 모든 소수 p에 대해 p의 인덱스의 i번째 비트가 1이면 a[i]에 p를 곱합니다.
     for (p, i) in p_indices {
         let mut bit = 1usize;
         while bit.ilog2() < max_bits {
@@ -55,8 +55,8 @@ pub fn fast_factorial(n: usize) -> BigUint {
 
     a.into_iter()
         .enumerate()
-        .map(|(i, a_i)| a_i.pow(2u32.pow(i as u32))) // raise every a[i] to the 2^ith power
-        .product() // we get our answer by multiplying the result
+        .map(|(i, a_i)| a_i.pow(2u32.pow(i as u32))) // 모든 a[i]를 2^i 거듭제곱합니다.
+        .product() // 결과를 곱하여 답을 얻습니다.
 }
 
 #[cfg(test)]

@@ -1,21 +1,21 @@
-//! This module provides functionality to check if there exists a subset of a given set of integers
-//! that sums to a target value. The implementation uses a recursive backtracking approach.
+//! 이 모듈은 주어진 정수 집합의 부분 집합 중 목표 값과 합이 같은 부분 집합이
+//! 존재하는지 확인하는 기능을 제공합니다. 구현에는 재귀적 백트래킹 접근 방식이 사용됩니다.
 
-/// Checks if there exists a subset of the given set that sums to the target value.
+/// 주어진 집합의 부분 집합 중 목표 값과 합이 같은 부분 집합이 존재하는지 확인합니다.
 pub fn has_subset_with_sum(set: &[isize], target: isize) -> bool {
     backtrack(set, set.len(), target)
 }
 
 fn backtrack(set: &[isize], remaining_items: usize, target: isize) -> bool {
-    // Found a subset with the required sum
+    // 필요한 합을 가진 부분 집합을 찾았습니다.
     if target == 0 {
         return true;
     }
-    // No more elements to process
+    // 처리할 요소가 더 이상 없습니다.
     if remaining_items == 0 {
         return false;
     }
-    // Check if we can find a subset including or excluding the last element
+    // 마지막 요소를 포함하거나 제외하는 부분 집합을 찾을 수 있는지 확인합니다.
     backtrack(set, remaining_items - 1, target)
         || backtrack(set, remaining_items - 1, target - set[remaining_items - 1])
 }

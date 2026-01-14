@@ -1,20 +1,20 @@
-/// Marginal Ranking
+/// 마진 순위 (Marginal Ranking)
 ///
-/// The 'average_margin_ranking_loss' function calculates the Margin Ranking loss, which is a
-/// loss function used for ranking problems in machine learning.
+/// 'average_margin_ranking_loss' 함수는 기계 학습의 순위 문제에 사용되는
+/// 손실 함수인 마진 순위 손실을 계산합니다.
 ///
-/// ## Formula
+/// ## 공식
 ///
-/// For a pair of values `x_first` and `x_second`, `margin`, and `y_true`,
-/// the Margin Ranking loss is calculated as:
+/// `x_first`, `x_second` 값 쌍, `margin`, `y_true`에 대해
+/// 마진 순위 손실은 다음과 같이 계산됩니다:
 ///
-///  - loss = `max(0, -y_true * (x_first - x_second) + margin)`.
+///  - 손실 = `max(0, -y_true * (x_first - x_second) + margin)`.
 ///
-/// It returns the average loss by dividing the `total_loss` by total no. of
-/// elements.
+/// `total_loss`를 총 요소 수로 나누어 평균 손실을 반환합니다.
 ///
-/// Pytorch implementation:
+/// 파이토치 구현:
 /// https://pytorch.org/docs/stable/generated/torch.nn.MarginRankingLoss.html
+/// 참고 자료:
 /// https://gombru.github.io/2019/04/03/ranking_loss/
 /// https://vinija.ai/concepts/loss/#pairwise-ranking-loss
 ///

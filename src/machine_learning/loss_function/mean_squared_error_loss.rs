@@ -1,17 +1,16 @@
-//! # Mean Square Loss Function
+//! # 평균 제곱 오차 손실 함수 (Mean Square Loss Function)
 //!
-//! The `mse_loss` function calculates the Mean Square Error loss, which is a
-//! robust loss function used in machine learning.
+//! `mse_loss` 함수는 기계 학습에서 사용되는 견고한 손실 함수인
+//! 평균 제곱 오차 손실을 계산합니다.
 //!
-//! ## Formula
+//! ## 공식
 //!
-//! For a pair of actual and predicted values, represented as vectors `actual`
-//! and `predicted`, the Mean Square  loss is calculated as:
+//! `actual` 및 `predicted` 벡터로 표현되는 실제 값과 예측 값 쌍에 대해
+//! 평균 제곱 오차 손실은 다음과 같이 계산됩니다:
 //!
-//! - loss = `(actual - predicted)^2 / n_elements`.
+//! - 손실 = `(실제값 - 예측값)^2 / 요소_개수`.
 //!
-//! It returns the average loss by dividing the `total_loss` by total no. of
-//! elements.
+//! `total_loss`를 총 요소 수로 나누어 평균 손실을 반환합니다.
 //!
 pub fn mse_loss(predicted: &[f64], actual: &[f64]) -> f64 {
     let mut total_loss: f64 = 0.0;

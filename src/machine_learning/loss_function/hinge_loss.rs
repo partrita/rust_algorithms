@@ -1,17 +1,16 @@
-//! # Hinge Loss
+//! # 힌지 손실 (Hinge Loss)
 //!
-//! The `hng_loss` function calculates the Hinge loss, which is a
-//! loss function used for classification problems in machine learning.
+//! `hng_loss` 함수는 기계 학습의 분류 문제에 사용되는 손실 함수인
+//! 힌지 손실을 계산합니다.
 //!
-//! ## Formula
+//! ## 공식
 //!
-//! For a pair of actual and predicted values, represented as vectors `y_true` and
-//! `y_pred`, the Hinge loss is calculated as:
+//! 실제 값과 예측 값 쌍(`y_true` 및 `y_pred` 벡터로 표시)에 대해
+//! 힌지 손실은 다음과 같이 계산됩니다:
 //!
-//! - loss = `max(0, 1 - y_true * y_pred)`.
+//! - 손실 = `max(0, 1 - y_true * y_pred)`.
 //!
-//! It returns the average loss by dividing the `total_loss` by total no. of
-//! elements.
+//! `total_loss`를 총 요소 수로 나누어 평균 손실을 반환합니다.
 //!
 pub fn hng_loss(y_true: &[f64], y_pred: &[f64]) -> f64 {
     let mut total_loss: f64 = 0.0;
